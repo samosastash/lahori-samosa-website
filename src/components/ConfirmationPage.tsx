@@ -6,21 +6,19 @@ import { supabase } from '../utils/supabase/client';
 
 interface Order {
   id: string;
-  items: Array<{
-    name: string;
-    quantity: number;
-    price: number;
-  }>;
-  total: number;
-  customer_info: {
-    name: string;
-    phone: string;
-    email: string;
-    address: string;
-    city: string;
-    postalCode: string;
+  order_details: {
+    items: Array<{
+      name: string;
+      quantity: number;
+      price: number;
+    }>;
+    total: number;
+    payment_method: string;
   };
-  payment_method: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  customer_address: string;
   status: string;
   created_at: string;
 }
@@ -159,22 +157,22 @@ export function ConfirmationPage() {
                 
                 <div>
                   <label className="text-sm text-gray-500">Customer Name</label>
-                  <p className="text-lg text-gray-900">{order.customer_info.name}</p>
+                  <p className="text-lg text-gray-900">{order.customer_name}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm text-gray-500">Phone Number</label>
-                  <p className="text-lg text-gray-900">{order.customer_info.phone}</p>
+                  <p className="text-lg text-gray-900">{order.customer_phone}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm text-gray-500">Email Address</label>
-                  <p className="text-lg text-gray-900">{order.customer_info.email}</p>
+                  <p className="text-lg text-gray-900">{order.customer_email}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm text-gray-500">Delivery Address</label>
-                  <p className="text-lg text-gray-900">{order.customer_info.address}, {order.customer_info.city}</p>
+                  <p className="text-lg text-gray-900">{order.customer_address}</p>
                 </div>
               </div>
             </div>
@@ -183,7 +181,7 @@ export function ConfirmationPage() {
             <div>
               <h3 className="text-lg text-gray-900 mb-4">Order Items</h3>
               <div className="space-y-3">
-                {order.items.map((item, index) => (
+                {order.order_details.items.map((item, index) => (
                   <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100">
                     <div>
                       <span className="text-gray-900">{item.name}</span>
@@ -194,7 +192,7 @@ export function ConfirmationPage() {
                 ))}
                 <div className="flex justify-between items-center pt-3 border-t-2 border-gray-200">
                   <span className="text-lg text-gray-900">Total</span>
-                  <span className="text-xl text-orange-600">Rs.{order.total}</span>
+                  <span className="text-xl text-orange-600">Rs.{order.order_details.total}</span>
                 </div>
               </div>
             </div>

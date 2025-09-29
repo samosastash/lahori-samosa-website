@@ -42,10 +42,15 @@ export function CheckoutPage() {
       
       const orderData = {
         id: orderId,
-        items: state.items,
-        total: state.total + 100, // Including delivery fee
-        customer_info: customerInfo,
-        payment_method: 'Cash on Delivery',
+        order_details: {
+          items: state.items,
+          total: state.total + 100,
+          payment_method: 'Cash on Delivery'
+        },
+        customer_name: customerInfo.name,
+        customer_phone: customerInfo.phone,
+        customer_email: customerInfo.email,
+        customer_address: `${customerInfo.address}, ${customerInfo.city}`,
         status: 'pending'
       };
 
