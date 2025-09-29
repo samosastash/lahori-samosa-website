@@ -429,7 +429,7 @@ export function CheckoutPage() {
               <ul className="text-xs text-orange-700 space-y-1">
                 <li>• Standard delivery: 2-3 business days</li>
                 <li>• Free delivery on orders over Rs.1000</li>
-                <li>• We deliver within Karachi city limits</li>
+                <li>• We deliver within Lahore city limits</li>
                 <li>• WhatsApp confirmation will be sent</li>
               </ul>
             </div>

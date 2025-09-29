@@ -263,7 +263,7 @@ export function HomePage() {
                 <p className="text-xl text-slate-600 leading-relaxed">
                   Our most popular item - crispy, golden samosas filled with perfectly 
                   spiced ingredients. Each bite delivers authentic Pakistani flavors 
-                  that transport you to the streets of Karachi.
+                  that transport you to the streets of Lahore.
                 </p>
               </div>
 
