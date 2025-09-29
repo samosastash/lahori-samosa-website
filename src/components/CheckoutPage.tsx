@@ -32,6 +32,29 @@ export function CheckoutPage() {
     }
   }, [state.items.length, navigate]);
 
+  // Test Supabase connection on component mount
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        console.log('Testing Supabase connection...');
+        const { data, error } = await supabase
+          .from('orders')
+          .select('id')
+          .limit(1);
+        
+        if (error) {
+          console.error('Supabase connection test failed:', error);
+        } else {
+          console.log('Supabase connection successful:', data);
+        }
+      } catch (err) {
+        console.error('Supabase connection error:', err);
+      }
+    };
+    
+    testConnection();
+  }, []);
+
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -54,6 +77,8 @@ export function CheckoutPage() {
         status: 'pending'
       };
 
+      console.log('Attempting to save order:', orderData);
+
       // Insert order into Supabase database
       const { data, error } = await supabase
         .from('orders')
@@ -62,8 +87,11 @@ export function CheckoutPage() {
         .single();
 
       if (error) {
-        console.error('Supabase error:', error);
-        throw new Error('Failed to save order to database');
+        console.error('Supabase error details:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        console.error('Error details:', error.details);
+        throw new Error(`Database error: ${error.message}`);
       }
 
       console.log('Order saved successfully:', data);
@@ -83,7 +111,10 @@ export function CheckoutPage() {
       
     } catch (error) {
       console.error('Order submission error:', error);
-      alert('Failed to place order. Please try again.');
+      console.error('Error type:', typeof error);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+      alert(`Failed to place order: ${error.message}`);
     } finally {
       setLoading(false);
     }
