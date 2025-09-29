@@ -138,9 +138,22 @@ export function Footer() {
                 <Link to="/terms-of-service" className="hover:text-slate-700 transition-colors">Terms of Service</Link>
                 <Link to="/shipping-info" className="hover:text-slate-700 transition-colors">Shipping Info</Link>
               </div>
-              <p className="text-xs text-slate-400">
-                Made by <span className="font-medium text-slate-600">TheMirMeister</span>
-              </p>
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -2,
+                  boxShadow: "0 8px 25px -8px rgba(6, 78, 59, 0.4)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="relative px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-xs font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                <span className="relative z-10 flex items-center space-x-1">
+                  <span>Made by</span>
+                  <span className="font-bold tracking-wide">TheMirMeister</span>
+                </span>
+                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+              </motion.button>
             </div>
           </div>
         </motion.div>
