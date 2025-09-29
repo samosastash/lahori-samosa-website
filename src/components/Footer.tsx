@@ -129,9 +129,14 @@ export function Footer() {
           className="border-t border-slate-200 mt-12 pt-8"
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-slate-500">
-              © 2023 Lahori Samosa. All rights reserved.
-            </p>
+            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+              <p className="text-sm text-slate-500">
+                © 2023 Lahori Samosa. All rights reserved.
+              </p>
+              <p className="text-xs text-slate-400">
+                Made by <span className="font-medium text-slate-600">TheMirMeister</span>
+              </p>
+            </div>
             <div className="flex space-x-6 text-sm text-slate-500">
               <Link to="/privacy-policy" className="hover:text-slate-700 transition-colors">Privacy Policy</Link>
               <Link to="/terms-of-service" className="hover:text-slate-700 transition-colors">Terms of Service</Link>
