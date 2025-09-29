@@ -17,10 +17,9 @@ interface Order {
   };
   customer_name: string;
   customer_phone: string;
-  customer_email: string;
-  customer_address: string;
-  status: string;
+  total_price: number;
   created_at: string;
+  updated_at: string;
 }
 
 export function ConfirmationPage() {
@@ -164,16 +163,6 @@ export function ConfirmationPage() {
                   <label className="text-sm text-gray-500">Phone Number</label>
                   <p className="text-lg text-gray-900">{order.customer_phone}</p>
                 </div>
-                
-                <div>
-                  <label className="text-sm text-gray-500">Email Address</label>
-                  <p className="text-lg text-gray-900">{order.customer_email}</p>
-                </div>
-                
-                <div>
-                  <label className="text-sm text-gray-500">Delivery Address</label>
-                  <p className="text-lg text-gray-900">{order.customer_address}</p>
-                </div>
               </div>
             </div>
 
@@ -192,7 +181,7 @@ export function ConfirmationPage() {
                 ))}
                 <div className="flex justify-between items-center pt-3 border-t-2 border-gray-200">
                   <span className="text-lg text-gray-900">Total</span>
-                  <span className="text-xl text-orange-600">Rs.{order.order_details.total}</span>
+                  <span className="text-xl text-orange-600">Rs.{order.total_price}</span>
                 </div>
               </div>
             </div>

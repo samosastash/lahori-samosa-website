@@ -72,9 +72,7 @@ export function CheckoutPage() {
         },
         customer_name: customerInfo.name,
         customer_phone: customerInfo.phone,
-        customer_email: customerInfo.email,
-        customer_address: `${customerInfo.address}, ${customerInfo.city}`,
-        status: 'pending'
+        total_price: state.total + 100
       };
 
       console.log('Attempting to save order:', orderData);
