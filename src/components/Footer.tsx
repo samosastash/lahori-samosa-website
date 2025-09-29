@@ -132,7 +132,7 @@ export function Footer() {
             <p className="text-sm text-slate-500">
               © 2023 Lahori Samosa. All rights reserved.
             </p>
-            <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
+            <div className="flex flex-col items-end space-y-2">
               <div className="flex space-x-6 text-sm text-slate-500">
                 <Link to="/privacy-policy" className="hover:text-slate-700 transition-colors">Privacy Policy</Link>
                 <Link to="/terms-of-service" className="hover:text-slate-700 transition-colors">Terms of Service</Link>
@@ -142,17 +142,15 @@ export function Footer() {
                 whileHover={{ 
                   scale: 1.05, 
                   y: -2,
-                  boxShadow: "0 8px 25px -8px rgba(6, 78, 59, 0.4)"
+                  opacity: 0.8
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white text-xs font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                className="px-4 py-2 bg-transparent border border-slate-300 hover:border-slate-400 text-slate-600 hover:text-slate-700 text-xs font-medium rounded-lg transition-all duration-300 hover:bg-slate-50"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                <span className="relative z-10 flex items-center space-x-1">
+                <span className="flex items-center space-x-1">
                   <span>Made by</span>
                   <span className="font-bold tracking-wide">TheMirMeister</span>
                 </span>
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
               </motion.button>
             </div>
           </div>
