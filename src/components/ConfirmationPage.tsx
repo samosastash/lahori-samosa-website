@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { CheckCircle, Package, MessageCircle, Home, ShoppingBag } from 'lucide-react';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { supabase } from '../utils/supabase/client';
 
 interface Order {
   id: string;
@@ -12,13 +12,17 @@ interface Order {
     price: number;
   }>;
   total: number;
-  customerInfo: {
+  customer_info: {
     name: string;
     phone: string;
+    email: string;
     address: string;
+    city: string;
+    postalCode: string;
   };
+  payment_method: string;
   status: string;
-  createdAt: string;
+  created_at: string;
 }
 
 export function ConfirmationPage() {
@@ -31,29 +35,20 @@ export function ConfirmationPage() {
       if (!orderId) return;
 
       try {
-        // Check if we're in demo mode
-        if (projectId === 'demo-project' || publicAnonKey === 'demo-key') {
-          // Demo mode - get order from localStorage
-          const orderJson = localStorage.getItem(`order_${orderId}`);
-          if (orderJson) {
-            const order = JSON.parse(orderJson);
-            setOrder(order);
-          }
-          setLoading(false);
-          return;
+        // Fetch order from Supabase database
+        const { data, error } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('id', orderId)
+          .single();
+
+        if (error) {
+          console.error('Supabase error:', error);
+          throw new Error('Failed to fetch order');
         }
 
-        // Production mode - fetch from local backend
-        const response = await fetch(`http://localhost:3001/make-server-88c4ddbd/orders/${orderId}`, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-          setOrder(result.order);
+        if (data) {
+          setOrder(data);
         }
       } catch (error) {
         console.error('Failed to fetch order:', error);
@@ -164,17 +159,22 @@ export function ConfirmationPage() {
                 
                 <div>
                   <label className="text-sm text-gray-500">Customer Name</label>
-                  <p className="text-lg text-gray-900">{order.customerInfo.name}</p>
+                  <p className="text-lg text-gray-900">{order.customer_info.name}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm text-gray-500">Phone Number</label>
-                  <p className="text-lg text-gray-900">{order.customerInfo.phone}</p>
+                  <p className="text-lg text-gray-900">{order.customer_info.phone}</p>
+                </div>
+                
+                <div>
+                  <label className="text-sm text-gray-500">Email Address</label>
+                  <p className="text-lg text-gray-900">{order.customer_info.email}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm text-gray-500">Delivery Address</label>
-                  <p className="text-lg text-gray-900">{order.customerInfo.address}</p>
+                  <p className="text-lg text-gray-900">{order.customer_info.address}, {order.customer_info.city}</p>
                 </div>
               </div>
             </div>

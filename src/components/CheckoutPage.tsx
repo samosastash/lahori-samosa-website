@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { CreditCard, MapPin, Phone, User, MessageCircle } from 'lucide-react';
 import { useCart } from './CartContext';
-import { projectId, publicAnonKey } from '../utils/supabase/info';
+import { supabase } from '../utils/supabase/client';
 
 export function CheckoutPage() {
   const { state, dispatch } = useCart();
@@ -37,56 +37,45 @@ export function CheckoutPage() {
     setLoading(true);
 
     try {
+      // Generate order ID
+      const orderId = `LAHORI-${Date.now().toString(36).toUpperCase()}`;
+      
       const orderData = {
+        id: orderId,
         items: state.items,
         total: state.total + 100, // Including delivery fee
-        customerInfo,
-        paymentMethod: 'Cash on Delivery'
+        customer_info: customerInfo,
+        payment_method: 'Cash on Delivery',
+        status: 'pending'
       };
 
-      // Check if we're in demo mode
-      if (projectId === 'demo-project' || publicAnonKey === 'demo-key') {
-        // Demo mode - simulate order placement
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        const demoOrderId = `LAHORI-${Date.now().toString(36).toUpperCase()}`;
-        
-        // Store order in localStorage for demo
-        localStorage.setItem(`order_${demoOrderId}`, JSON.stringify({
-          id: demoOrderId,
-          ...orderData,
-          status: 'pending',
-          createdAt: new Date().toISOString()
-        }));
+      // Insert order into Supabase database
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select()
+        .single();
 
-        // Clear cart
-        dispatch({ type: 'CLEAR_CART' });
-        // Navigate to confirmation page
-        navigate(`/confirmation/${demoOrderId}`);
-        return;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error('Failed to save order to database');
       }
 
-      // Production mode - make actual API call to local backend
-      const response = await fetch(`http://localhost:3001/make-server-88c4ddbd/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
+      console.log('Order saved successfully:', data);
+
+      // Send email notification using EmailJS from frontend
+      await sendOrderEmail(orderId, {
+        items: state.items,
+        total: state.total + 100,
+        customerInfo,
+        paymentMethod: 'Cash on Delivery'
       });
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Send email notification using EmailJS from frontend
-        await sendOrderEmail(result.orderId, orderData);
-        
-        // Clear cart
-        dispatch({ type: 'CLEAR_CART' });
-        // Navigate to confirmation page
-        navigate(`/confirmation/${result.orderId}`);
-      } else {
-        throw new Error(result.error || 'Failed to place order');
-      }
+      
+      // Clear cart
+      dispatch({ type: 'CLEAR_CART' });
+      // Navigate to confirmation page
+      navigate(`/confirmation/${orderId}`);
+      
     } catch (error) {
       console.error('Order submission error:', error);
       alert('Failed to place order. Please try again.');
