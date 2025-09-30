@@ -13,12 +13,16 @@ import { ContactPage } from './components/ContactPage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { TermsOfServicePage } from './components/TermsOfServicePage';
 import { ShippingInfoPage } from './components/ShippingInfoPage';
+import { FAQPage } from './components/FAQPage';
+import { SideCart } from './components/SideCart';
+import { ScrollToTop } from './components/ScrollToTop';
 import { CartProvider } from './components/CartContext';
 
 export default function App() {
   return (
     <CartProvider>
       <Router>
+        <ScrollToTop />
         <div className="min-h-screen bg-white flex flex-col">
           <Header />
           <main className="flex-1">
@@ -31,6 +35,7 @@ export default function App() {
               <Route path="/confirmation/:orderId" element={<ConfirmationPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/faq" element={<FAQPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms-of-service" element={<TermsOfServicePage />} />
               <Route path="/shipping-info" element={<ShippingInfoPage />} />
@@ -40,6 +45,7 @@ export default function App() {
             </Routes>
           </main>
           <Footer />
+          <SideCart />
         </div>
       </Router>
     </CartProvider>

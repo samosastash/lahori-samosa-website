@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Facebook, Instagram, MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
 
 export function Footer() {
@@ -8,6 +8,7 @@ export function Footer() {
     { name: 'Products', path: '/products' },
     { name: 'About Us', path: '/about' },
     { name: 'Contact', path: '/contact' },
+    { name: 'FAQ', path: '/faq' },
   ];
 
   const socialLinks = [
@@ -130,7 +131,7 @@ export function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-slate-500">
-              © 2023 Lahori Samosa. All rights reserved.
+              © 2025 Lahori Samosa. All rights reserved.
             </p>
             <div className="flex flex-col items-end space-y-2">
               <div className="flex space-x-6 text-sm text-slate-500">
