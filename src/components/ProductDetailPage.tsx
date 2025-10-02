@@ -56,7 +56,7 @@ export function ProductDetailPage() {
     },
     {
       id: '7',
-      name: 'Chicken Veg Table Roll',
+      name: 'Chicken Vegetable Roll',
       price: 560,
       image: '/images/products/VEGCHICROLL.jpg',
       description: 'Chicken and vegetable rolls perfect for any occasion. These rolls combine tender chicken with fresh vegetables, wrapped in a crispy pastry shell. Ideal for parties, gatherings, or as a delicious snack any time of the day.'

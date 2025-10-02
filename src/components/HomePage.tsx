@@ -317,7 +317,7 @@ export function HomePage() {
               Ready to Experience Authentic Flavors?
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Join thousands of satisfied customers who trust FrozenFresh 
+              Join thousands of satisfied customers who trust Lahori Samosa 
               for their authentic Pakistani cuisine needs.
             </p>
           </motion.div>

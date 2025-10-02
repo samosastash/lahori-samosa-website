@@ -130,7 +130,7 @@ export function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-slate-500">
-              © 2023 Lahori Samosa. All rights reserved.
+              © 2025 Lahori Samosa. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm text-slate-500">
               <Link to="/privacy-policy" className="hover:text-slate-700 transition-colors">Privacy Policy</Link>

@@ -6,7 +6,7 @@
 ```bash
 npm run build
 ```
-This creates a `dist` folder with optimized production files.
+This creates a `build` folder with optimized production files.
 
 ### 2. Set Environment Variables
 ```bash
@@ -23,7 +23,7 @@ npm start
 
 #### For Vercel/Netlify (Frontend Only):
 - Build command: `npm run build`
-- Output directory: `dist`
+- Output directory: `build`
 - Install command: `npm install`
 
 #### For VPS/Dedicated Server (Full Stack):

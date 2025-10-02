@@ -54,7 +54,7 @@ export function ProductsPage() {
     },
     {
       id: '7',
-      name: 'Chicken Veg Table Roll',
+      name: 'Chicken Vegetable Roll',
       price: 560,
       image: '/images/products/VEGCHICROLL.jpg',
       description: 'Chicken and vegetable rolls perfect for any occasion.'
