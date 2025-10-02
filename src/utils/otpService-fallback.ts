@@ -1,5 +1,5 @@
-// OTP Service for email verification
-export class OTPService {
+// Fallback OTP Service using existing EmailJS template
+export class OTPServiceFallback {
   private static otpStore = new Map<string, { otp: string; timestamp: number; attempts: number }>();
   private static readonly OTP_EXPIRY = 5 * 60 * 1000; // 5 minutes
   private static readonly MAX_ATTEMPTS = 3;
@@ -54,32 +54,31 @@ export class OTPService {
     }
   }
 
-  // Check if email is already verified (OTP exists and not expired)
-  static isOTPValid(email: string): boolean {
-    const normalizedEmail = email.toLowerCase();
-    const otpData = this.otpStore.get(normalizedEmail);
-    
-    if (!otpData) return false;
-    
-    return Date.now() - otpData.timestamp <= this.OTP_EXPIRY;
-  }
-
-  // Clean up expired OTPs (optional cleanup method)
-  static cleanupExpiredOTPs(): void {
-    const now = Date.now();
-    for (const [email, otpData] of this.otpStore.entries()) {
-      if (now - otpData.timestamp > this.OTP_EXPIRY) {
-        this.otpStore.delete(email);
-      }
-    }
-  }
-
-  // Send OTP via EmailJS
+  // Send OTP via EmailJS using existing template with better formatting
   static async sendOTP(email: string, customerName: string = 'Customer'): Promise<{ success: boolean; message: string }> {
     try {
       const otp = this.generateOTP();
       
-      // Send OTP email using EmailJS
+      // Format OTP message for existing template
+      const otpMessage = `
+🔐 EMAIL VERIFICATION - LAHORI SAMOSA
+
+Hello ${customerName},
+
+Your verification code is: ${otp}
+
+⏰ This code will expire in 5 minutes.
+🔒 Please use this code to verify your email address and complete your order.
+
+If you didn't request this code, please ignore this email.
+
+Best regards,
+Lahori Samosa Team
+📧 samosastash@gmail.com
+📞 +92 324 4060113
+      `.trim();
+      
+      // Send OTP email using existing template with better formatting
       const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
         headers: {
@@ -87,13 +86,15 @@ export class OTPService {
         },
         body: JSON.stringify({
           service_id: 'service_huwxfin',
-          template_id: 'template_otp_verify', // Dedicated OTP template (create this in EmailJS)
+          template_id: 'template_5sle4gl', // Using existing template
           user_id: 'aFnOBMy5siQAFBFJ1',
           template_params: {
+            order_id: `EMAIL VERIFICATION CODE`,
             customer_name: customerName,
-            otp_code: otp,
-            customer_email: email,
-            to_email: email
+            customer_phone: email,
+            customer_address: `Verification Code: ${otp}`,
+            order_items: otpMessage,
+            total_amount: `Code expires in 5 minutes`
           }
         })
       });
@@ -103,6 +104,7 @@ export class OTPService {
         this.storeOTP(email, otp);
         return { success: true, message: 'Verification code sent to your email!' };
       } else {
+        console.error('EmailJS response:', await response.text());
         return { success: false, message: 'Failed to send verification code. Please try again.' };
       }
     } catch (error) {

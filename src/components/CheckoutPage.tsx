@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { CreditCard, MapPin, Phone, User, Mail, Shield, CheckCircle } from 'lucide-react';
 import { useCart } from './CartContext';
 import { supabase } from '../utils/supabase/client';
-import { OTPService } from '../utils/otpService';
+import { OTPServiceFallback as OTPService } from '../utils/otpService-fallback';
 
 export function CheckoutPage() {
   const { state, dispatch } = useCart();
