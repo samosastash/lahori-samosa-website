@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Leaf, Clock, Award, ArrowRight, Star } from 'lucide-react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ResponsiveImage } from './ResponsiveImage';
 
 export function HomePage() {
   const heroImage = "/images/hero/heropagesamosa.jpg";
@@ -134,10 +134,13 @@ export function HomePage() {
                   boxShadow: "0 25px 60px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5)"
                 }}
               >
-                <ImageWithFallback
+                <ResponsiveImage
                   src={heroImage}
                   alt="Premium Pakistani Food"
-                  className="w-full h-96 object-cover"
+                  className="w-full h-96"
+                  aspectRatio="16/9"
+                  objectFit="cover"
+                  priority={true}
                 />
               </motion.div>
               
@@ -228,10 +231,12 @@ export function HomePage() {
                 className="relative group"
               >
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden relative z-10">
-                  <ImageWithFallback
+                  <ResponsiveImage
                     src={samosaImage}
                     alt="Premium Samosas"
-                    className="w-full h-96 object-cover"
+                    className="w-full h-96"
+                    aspectRatio="4/3"
+                    objectFit="cover"
                   />
                 </div>
                 {/* 3D Shadow */}

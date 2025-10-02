@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCart } from './CartContext';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ResponsiveImage } from './ResponsiveImage';
 
 export function SideCart() {
   const { state, dispatch } = useCart();
@@ -102,10 +102,12 @@ export function SideCart() {
                     >
                       {/* Product Image */}
                       <div className="w-16 h-16 bg-white rounded-lg overflow-hidden flex-shrink-0">
-                        <ImageWithFallback
+                        <ResponsiveImage
                           src={item.image}
                           alt={item.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full"
+                          aspectRatio="1/1"
+                          objectFit="cover"
                         />
                       </div>
 

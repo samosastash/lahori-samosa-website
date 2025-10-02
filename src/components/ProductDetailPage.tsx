@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ShoppingCart, Star, ArrowLeft, Plus, Minus } from 'lucide-react';
 import { useCart, Product } from './CartContext';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ResponsiveImage } from './ResponsiveImage';
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -111,10 +111,13 @@ export function ProductDetailPage() {
             className="relative"
           >
             <div className="aspect-square bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl overflow-hidden">
-              <ImageWithFallback
+              <ResponsiveImage
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                className="w-full h-full hover:scale-105 transition-transform duration-500"
+                aspectRatio="1/1"
+                objectFit="cover"
+                priority={true}
               />
             </div>
           </motion.div>

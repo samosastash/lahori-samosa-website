@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ShoppingCart, Star, Plus } from 'lucide-react';
 import { useCart, Product } from './CartContext';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ResponsiveImage } from './ResponsiveImage';
 
 export function ProductsPage() {
   const { dispatch } = useCart();
@@ -123,10 +123,12 @@ export function ProductsPage() {
                   >
                     {/* Product Image */}
                     <div className="relative overflow-hidden bg-slate-50">
-                      <ImageWithFallback
+                      <ResponsiveImage
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-48 group-hover:scale-110 transition-transform duration-500"
+                        aspectRatio="4/3"
+                        objectFit="cover"
                       />
                       
                       {/* Add to Cart Button - appears on hover */}
