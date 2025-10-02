@@ -426,21 +426,37 @@ export function CheckoutPage() {
                               whileTap={{ scale: 0.98 }}
                               onClick={handleVerifyOTP}
                               disabled={otpLoading || otpCode.length !== 6}
-                              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-base"
+                              className={`w-full px-6 py-4 rounded-lg font-bold text-lg transition-all duration-200 ${
+                                otpLoading || otpCode.length !== 6
+                                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed border-2 border-gray-200'
+                                  : 'bg-emerald-600 text-white hover:bg-emerald-700 border-2 border-emerald-600 shadow-lg hover:shadow-xl'
+                              }`}
                             >
                               {otpLoading ? (
                                 <div className="flex items-center justify-center">
-                                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                  Verifying...
+                                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400 mr-3"></div>
+                                  Verifying Code...
                                 </div>
                               ) : (
-                                'Verify Code'
+                                <div className="flex items-center justify-center">
+                                  <span>🔐 Verify Code</span>
+                                </div>
                               )}
                             </motion.button>
                             
-                            <p className="text-xs text-blue-600 text-center">
-                              Enter all 6 digits, then click "Verify Code" to continue
-                            </p>
+                            <div className="text-center">
+                              <p className="text-sm text-blue-700 font-medium">
+                                {otpCode.length < 6 
+                                  ? `Enter ${6 - otpCode.length} more digit${6 - otpCode.length !== 1 ? 's' : ''} to enable verification`
+                                  : 'Ready to verify! Click the button above.'
+                                }
+                              </p>
+                              {otpCode.length === 6 && (
+                                <p className="text-xs text-emerald-600 mt-1">
+                                  ✅ Code complete - button is now active
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
