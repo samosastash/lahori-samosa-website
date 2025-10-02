@@ -15,6 +15,7 @@ import { TermsOfServicePage } from './components/TermsOfServicePage';
 import { ShippingInfoPage } from './components/ShippingInfoPage';
 import { CartProvider } from './components/CartContext';
 import { ScrollToTop } from './components/ScrollToTop';
+import { SideCart } from './components/SideCart';
 
 export default function App() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
           </main>
           <Footer />
         </div>
+        <SideCart />
       </Router>
     </CartProvider>
   );

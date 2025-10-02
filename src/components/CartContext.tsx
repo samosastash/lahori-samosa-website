@@ -15,13 +15,16 @@ export interface CartItem extends Product {
 interface CartState {
   items: CartItem[];
   total: number;
+  isSideCartOpen: boolean;
 }
 
 type CartAction = 
   | { type: 'ADD_TO_CART'; product: Product }
   | { type: 'REMOVE_FROM_CART'; productId: string }
   | { type: 'UPDATE_QUANTITY'; productId: string; quantity: number }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART' }
+  | { type: 'OPEN_SIDE_CART' }
+  | { type: 'CLOSE_SIDE_CART' };
 
 const CartContext = createContext<{
   state: CartState;
@@ -41,13 +44,15 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         );
         return {
           items: updatedItems,
-          total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+          isSideCartOpen: true
         };
       } else {
         const newItems = [...state.items, { ...action.product, quantity: 1 }];
         return {
           items: newItems,
-          total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          total: newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+          isSideCartOpen: true
         };
       }
     }
@@ -56,7 +61,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       const filteredItems = state.items.filter(item => item.id !== action.productId);
       return {
         items: filteredItems,
-        total: filteredItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        total: filteredItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        isSideCartOpen: state.isSideCartOpen
       };
     }
     
@@ -65,7 +71,8 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         const filteredItems = state.items.filter(item => item.id !== action.productId);
         return {
           items: filteredItems,
-          total: filteredItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+          total: filteredItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+          isSideCartOpen: state.isSideCartOpen
         };
       }
       
@@ -76,12 +83,19 @@ function cartReducer(state: CartState, action: CartAction): CartState {
       );
       return {
         items: updatedItems,
-        total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+        total: updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        isSideCartOpen: state.isSideCartOpen
       };
     }
     
     case 'CLEAR_CART':
-      return { items: [], total: 0 };
+      return { items: [], total: 0, isSideCartOpen: false };
+    
+    case 'OPEN_SIDE_CART':
+      return { ...state, isSideCartOpen: true };
+    
+    case 'CLOSE_SIDE_CART':
+      return { ...state, isSideCartOpen: false };
     
     default:
       return state;
@@ -89,7 +103,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, { items: [], total: 0 });
+  const [state, dispatch] = useReducer(cartReducer, { items: [], total: 0, isSideCartOpen: false });
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>
