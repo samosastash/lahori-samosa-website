@@ -74,27 +74,31 @@ export function CheckoutPage() {
     }
   };
 
-  // Verify OTP
+  // Verify OTP - Manual verification only
   const handleVerifyOTP = async () => {
-    if (!otpCode) {
-      setOtpError('Please enter the verification code');
+    if (!otpCode || otpCode.length !== 6) {
+      setOtpError('Please enter the complete 6-digit verification code');
       return;
     }
 
     setOtpLoading(true);
     setOtpError('');
+    setOtpMessage('');
 
     try {
+      console.log('Verifying OTP:', otpCode, 'for email:', customerInfo.email);
       const result = OTPService.verifyOTP(customerInfo.email, otpCode);
       
       if (result.success) {
         setOtpVerified(true);
         setOtpMessage(result.message);
         setOtpError('');
+        setOtpCode(''); // Clear the code after successful verification
       } else {
         setOtpError(result.message);
       }
     } catch (error) {
+      console.error('OTP verification error:', error);
       setOtpError('Failed to verify code. Please try again.');
     } finally {
       setOtpLoading(false);
@@ -400,30 +404,43 @@ export function CheckoutPage() {
                             We've sent a 6-digit verification code to your email. Please enter it below.
                           </p>
                           
-                          <div className="flex flex-col sm:flex-row gap-3">
-                            <input
-                              type="text"
-                              value={otpCode}
-                              onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                              className="flex-1 px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg font-mono"
-                              placeholder="Enter 6-digit code"
-                              maxLength={6}
-                            />
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-xs font-medium text-blue-700 mb-1">
+                                Enter Verification Code
+                              </label>
+                              <input
+                                type="text"
+                                value={otpCode}
+                                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-xl font-mono tracking-widest"
+                                placeholder="000000"
+                                maxLength={6}
+                                disabled={otpLoading}
+                              />
+                            </div>
+                            
                             <motion.button
                               type="button"
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                               onClick={handleVerifyOTP}
-                              disabled={otpLoading || otpCode.length < 6}
-                              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium min-w-[100px]"
+                              disabled={otpLoading || otpCode.length !== 6}
+                              className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-base"
                             >
-                              {otpLoading ? 'Verifying...' : 'Verify'}
+                              {otpLoading ? (
+                                <div className="flex items-center justify-center">
+                                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                  Verifying...
+                                </div>
+                              ) : (
+                                'Verify Code'
+                              )}
                             </motion.button>
-                          </div>
-                          
-                          {/* Debug info - remove after testing */}
-                          <div className="mt-2 text-xs text-gray-500">
-                            Code length: {otpCode.length} | Button enabled: {otpCode.length >= 6 && !otpLoading ? 'Yes' : 'No'}
+                            
+                            <p className="text-xs text-blue-600 text-center">
+                              Enter all 6 digits, then click "Verify Code" to continue
+                            </p>
                           </div>
                         </div>
                       </div>
