@@ -1,3 +1,5 @@
+import { EmailConfig, EMAIL_API_URL } from './emailConfig';
+
 // OTP Service for email verification
 export class OTPService {
   private static otpStore = new Map<string, { otp: string; timestamp: number; attempts: number }>();
@@ -79,16 +81,16 @@ export class OTPService {
     try {
       const otp = this.generateOTP();
       
-      // Send OTP email using EmailJS
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      // Send OTP email using dedicated EmailJS account
+      const response = await fetch(EMAIL_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'service_huwxfin',
-          template_id: 'template_otp_verify', // Dedicated OTP template (create this in EmailJS)
-          user_id: 'aFnOBMy5siQAFBFJ1',
+          service_id: EmailConfig.otp.serviceId,
+          template_id: EmailConfig.otp.templates.verification,
+          user_id: EmailConfig.otp.userId,
           template_params: {
             customer_name: customerName,
             otp_code: otp,

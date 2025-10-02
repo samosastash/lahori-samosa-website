@@ -4,7 +4,8 @@ import { motion } from 'motion/react';
 import { CreditCard, MapPin, Phone, User, Mail, Shield, CheckCircle } from 'lucide-react';
 import { useCart } from './CartContext';
 import { supabase } from '../utils/supabase/client';
-import { OTPServiceFallback as OTPService } from '../utils/otpService-fallback';
+import { OTPService } from '../utils/otpService';
+import { EmailConfig, EMAIL_API_URL } from '../utils/emailConfig';
 
 export function CheckoutPage() {
   const { state, dispatch } = useCart();
@@ -207,16 +208,16 @@ export function CheckoutPage() {
         `• ${item.name} x${item.quantity} - Rs.${item.price * item.quantity}`
       ).join('\n');
 
-      // Send email to business (you)
-      const businessEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      // Send email to business (you) using original EmailJS account
+      const businessEmailResponse = await fetch(EMAIL_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'service_huwxfin',
-          template_id: 'template_5sle4gl', // Business order template
-          user_id: 'aFnOBMy5siQAFBFJ1',
+          service_id: EmailConfig.business.serviceId,
+          template_id: EmailConfig.business.templates.businessOrder,
+          user_id: EmailConfig.business.userId,
           template_params: {
             order_id: orderId,
             customer_name: orderData.customerInfo.name,
@@ -228,18 +229,18 @@ export function CheckoutPage() {
         })
       });
 
-      // Send email to customer (if they provided email)
+      // Send email to customer (if they provided email) using original EmailJS account
       let customerEmailResponse = null;
       if (orderData.customerInfo.email) {
-        customerEmailResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        customerEmailResponse = await fetch(EMAIL_API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            service_id: 'service_huwxfin',
-            template_id: 'template_w6rt2f5',
-            user_id: 'aFnOBMy5siQAFBFJ1',
+            service_id: EmailConfig.business.serviceId,
+            template_id: EmailConfig.business.templates.customerConfirmation,
+            user_id: EmailConfig.business.userId,
             template_params: {
               order_id: orderId,
               customer_name: orderData.customerInfo.name,
