@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, MessageCircle, Send, Clock, CheckCircle } from 'lucide-react';
+import { EmailConfig, EMAIL_API_URL } from '../utils/emailConfig';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -25,16 +26,16 @@ export function ContactPage() {
     setIsSubmitting(true);
     
     try {
-      // Send contact form email using EmailJS
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      // Send contact form email using business EmailJS account
+      const response = await fetch(EMAIL_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'service_huwxfin',
-          template_id: 'template_5sle4gl', // We'll use the same template for now
-          user_id: 'aFnOBMy5siQAFBFJ1',
+          service_id: EmailConfig.business.serviceId,
+          template_id: EmailConfig.business.templates.businessOrder,
+          user_id: EmailConfig.business.userId,
           template_params: {
             // Using order template fields for contact form
             order_id: `CONTACT-${Date.now().toString(36).toUpperCase()}`,
