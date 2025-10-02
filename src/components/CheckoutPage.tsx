@@ -400,13 +400,13 @@ export function CheckoutPage() {
                             We've sent a 6-digit verification code to your email. Please enter it below.
                           </p>
                           
-                          <div className="flex gap-3">
+                          <div className="flex flex-col sm:flex-row gap-3">
                             <input
                               type="text"
                               value={otpCode}
                               onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                               className="flex-1 px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-lg font-mono"
-                              placeholder="000000"
+                              placeholder="Enter 6-digit code"
                               maxLength={6}
                             />
                             <motion.button
@@ -414,11 +414,16 @@ export function CheckoutPage() {
                               whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.98 }}
                               onClick={handleVerifyOTP}
-                              disabled={otpLoading || otpCode.length !== 6}
-                              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={otpLoading || otpCode.length < 6}
+                              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium min-w-[100px]"
                             >
                               {otpLoading ? 'Verifying...' : 'Verify'}
                             </motion.button>
+                          </div>
+                          
+                          {/* Debug info - remove after testing */}
+                          <div className="mt-2 text-xs text-gray-500">
+                            Code length: {otpCode.length} | Button enabled: {otpCode.length >= 6 && !otpLoading ? 'Yes' : 'No'}
                           </div>
                         </div>
                       </div>
