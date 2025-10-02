@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { CreditCard, MapPin, Phone, User, MessageCircle } from 'lucide-react';
+import { CreditCard, MapPin, Phone, User } from 'lucide-react';
 import { useCart } from './CartContext';
 import { supabase } from '../utils/supabase/client';
 
@@ -13,9 +13,7 @@ export function CheckoutPage() {
     name: '',
     phone: '',
     email: '',
-    address: '',
-    city: '',
-    postalCode: ''
+    address: ''
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -162,7 +160,7 @@ export function CheckoutPage() {
               order_id: orderId,
               customer_name: orderData.customerInfo.name,
               customer_phone: orderData.customerInfo.phone,
-              customer_address: `${orderData.customerInfo.address}, ${orderData.customerInfo.city}`,
+              customer_address: orderData.customerInfo.address,
               order_items: items,
               total_amount: orderData.total,
               customer_email: orderData.customerInfo.email,
@@ -296,36 +294,6 @@ export function CheckoutPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-2">
-                      City *
-                    </label>
-                    <input
-                      type="text"
-                      name="city"
-                      required
-                      value={customerInfo.city}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="Lahore"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-2">
-                      Postal Code
-                    </label>
-                    <input
-                      type="text"
-                      name="postalCode"
-                      value={customerInfo.postalCode}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      placeholder="75000"
-                    />
-                  </div>
-                </div>
               </form>
             </div>
 
@@ -356,18 +324,6 @@ export function CheckoutPage() {
               </div>
             </div>
 
-            {/* WhatsApp Notification */}
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <div className="flex items-start">
-                <MessageCircle className="w-5 h-5 text-green-600 mt-0.5 mr-3" />
-                <div>
-                  <h3 className="text-sm text-green-800 mb-1">WhatsApp Confirmation</h3>
-                  <p className="text-xs text-green-700">
-                    Your order details will be sent to our WhatsApp number (+92 324 4060113) for quick confirmation and coordination.
-                  </p>
-                </div>
-              </div>
-            </div>
           </motion.div>
 
           {/* Order Summary */}
@@ -430,7 +386,7 @@ export function CheckoutPage() {
                 <li>• Standard delivery: 2-3 business days</li>
                 <li>• Free delivery on orders over Rs.1000</li>
                 <li>• We deliver within Lahore city limits</li>
-                <li>• WhatsApp confirmation will be sent</li>
+                <li>• Email confirmation will be sent</li>
               </ul>
             </div>
           </motion.div>
