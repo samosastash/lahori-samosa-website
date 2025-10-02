@@ -14,11 +14,13 @@ import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { TermsOfServicePage } from './components/TermsOfServicePage';
 import { ShippingInfoPage } from './components/ShippingInfoPage';
 import { CartProvider } from './components/CartContext';
+import { ScrollToTop } from './components/ScrollToTop';
 
 export default function App() {
   return (
     <CartProvider>
       <Router>
+        <ScrollToTop />
         <div className="min-h-screen bg-white flex flex-col">
           <Header />
           <main className="flex-1">

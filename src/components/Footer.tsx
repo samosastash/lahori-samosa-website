@@ -10,6 +10,15 @@ export function Footer() {
     { name: 'Contact', path: '/contact' },
   ];
 
+  const handleLinkClick = () => {
+    // Scroll to top when footer link is clicked
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  };
+
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Instagram, href: '#', label: 'Instagram' },
@@ -77,6 +86,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     to={link.path}
+                    onClick={handleLinkClick}
                     className="text-slate-600 hover:text-emerald-700 transition-colors text-sm group"
                   >
                     <span className="group-hover:translate-x-1 transition-transform inline-block">
@@ -133,9 +143,9 @@ export function Footer() {
               © 2025 Lahori Samosa. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm text-slate-500">
-              <Link to="/privacy-policy" className="hover:text-slate-700 transition-colors">Privacy Policy</Link>
-              <Link to="/terms-of-service" className="hover:text-slate-700 transition-colors">Terms of Service</Link>
-              <Link to="/shipping-info" className="hover:text-slate-700 transition-colors">Shipping Info</Link>
+              <Link to="/privacy-policy" onClick={handleLinkClick} className="hover:text-slate-700 transition-colors">Privacy Policy</Link>
+              <Link to="/terms-of-service" onClick={handleLinkClick} className="hover:text-slate-700 transition-colors">Terms of Service</Link>
+              <Link to="/shipping-info" onClick={handleLinkClick} className="hover:text-slate-700 transition-colors">Shipping Info</Link>
             </div>
           </div>
         </motion.div>
