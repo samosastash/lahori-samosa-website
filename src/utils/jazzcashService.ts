@@ -50,9 +50,17 @@ export class JazzCashService {
     // JazzCash official method: Sort all fields alphabetically, then concatenate
     const sortedData: Record<string, string> = {};
     
-    // Sort all fields alphabetically (excluding pp_SecureHash)
+    // Only include JazzCash parameters (exclude custom parameters and response fields)
+    const jazzcashParams = [
+      'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
+      'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
+      'pp_ReturnURL', 'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime',
+      'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+    ];
+    
+    // Filter and sort only JazzCash parameters
     Object.keys(data)
-      .filter(key => key !== 'pp_SecureHash')
+      .filter(key => jazzcashParams.includes(key) && key !== 'pp_SecureHash')
       .sort()
       .forEach(key => {
         sortedData[key] = data[key] || '';
@@ -64,7 +72,7 @@ export class JazzCashService {
     // Prepend the integrity salt
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${concatenatedString}`;
     
-    console.log('Sorted data:', sortedData);
+    console.log('JazzCash params only:', sortedData);
     console.log('Concatenated string:', concatenatedString);
     console.log('Hash string:', hashString);
     console.log('Hash string length:', hashString.length);
@@ -178,9 +186,30 @@ export class JazzCashService {
         };
       }
 
-      // Verify secure hash
-      const calculatedHash = this.generateHash(responseData);
+      // Filter out custom parameters (like 'payment') and only use JazzCash response parameters
+      const jazzcashResponseParams: Record<string, string> = {};
+      const jazzcashResponseFields = [
+        'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
+        'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_ResponseCode',
+        'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 'pp_TxnCurrency',
+        'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+      ];
+
+      jazzcashResponseFields.forEach(field => {
+        if (responseData[field] !== undefined) {
+          jazzcashResponseParams[field] = responseData[field];
+        }
+      });
+
+      console.log('Filtered JazzCash response params:', jazzcashResponseParams);
+
+      // Verify secure hash using only JazzCash parameters
+      const calculatedHash = this.generateHash(jazzcashResponseParams);
       if (calculatedHash !== responseData.pp_SecureHash) {
+        console.log('Hash mismatch:', {
+          calculated: calculatedHash,
+          received: responseData.pp_SecureHash
+        });
         return {
           isValid: false,
           isSuccess: false,
