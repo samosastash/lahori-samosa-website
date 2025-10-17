@@ -81,6 +81,9 @@ export class JazzCashService {
     // JazzCash official method: Sort all fields alphabetically, then concatenate
     const sortedData: Record<string, string> = {};
     
+    console.log(`🔍 DEBUG: Allowed params for ${type}:`, allowedParams);
+    console.log(`🔍 DEBUG: Available data keys:`, Object.keys(data));
+    
     // Filter and sort only allowed parameters
     Object.keys(data)
       .filter(key => allowedParams.includes(key) && key !== 'pp_SecureHash')
@@ -88,6 +91,9 @@ export class JazzCashService {
       .forEach(key => {
         sortedData[key] = data[key] || '';
       });
+    
+    console.log(`🔍 DEBUG: Filtered and sorted data:`, sortedData);
+    console.log(`🔍 DEBUG: Missing params:`, allowedParams.filter(param => !Object.keys(sortedData).includes(param)));
     
     // Create array of key-value pairs for debugging
     const keyValuePairs = Object.entries(sortedData).map(([key, value]) => `${key}=${value}`);

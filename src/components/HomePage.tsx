@@ -21,6 +21,11 @@ export function HomePage() {
     testConsoleNinja();
   }, []);
 
+  // Force rebuild test
+  useEffect(() => {
+    console.log('🚀 BUILD TEST - Hash fix deployed at:', new Date().toISOString());
+  }, []);
+
   // Handle payment confirmation
   useEffect(() => {
     const paymentParam = searchParams.get('payment');
