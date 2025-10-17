@@ -63,12 +63,12 @@ export class JazzCashService {
    */
   private static generateResponseHash(data: Record<string, string>): string {
     // JazzCash response parameters for hash generation (in alphabetical order)
-    // Include ALL parameters that JazzCash sends in response
+    // EXCLUDE pp_Password and pp_TxnExpiryDateTime as they are not used in response hash
     const responseParams = [
       'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
-      'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
+      'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber',
       'pp_ResponseCode', 'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 
-      'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+      'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
     ];
     
     return this.generateHash(data, responseParams, 'RESPONSE');
@@ -223,11 +223,12 @@ export class JazzCashService {
       const jazzcashResponseParams: Record<string, string> = {};
       
       // JazzCash response parameters that should be included in hash verification
+      // EXCLUDE pp_Password and pp_TxnExpiryDateTime as they are not used in response hash
       const responseFields = [
         'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
-        'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
+        'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber',
         'pp_ResponseCode', 'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 
-        'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+        'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
       ];
 
       // Only include fields that exist in the response and are in our allowed list

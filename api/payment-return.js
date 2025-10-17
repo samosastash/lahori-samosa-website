@@ -9,12 +9,12 @@ const JAZZCASH_INTEGRITY_SALT = 'c78ust11gu';
 // Function to generate secure hash (same as frontend)
 function generateResponseHash(data) {
   // JazzCash response parameters for hash generation (in alphabetical order)
-  // Include ALL parameters that JazzCash sends in response
+  // EXCLUDE pp_Password and pp_TxnExpiryDateTime as they are not used in response hash
   const responseParams = [
     'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
-    'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
+    'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber',
     'pp_ResponseCode', 'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 
-    'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+    'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
   ];
   
   const sortedData = {};

@@ -36,7 +36,7 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
       const paymentData: JazzCashPaymentData = {
         amount: orderData.total,
         billReference: orderData.orderId,
-        description: `Order from Lahori Samosa - ${orderData.items.length} item(s)`,
+        description: `LAHORI SAMOSA INVOICE`,
         customerName: orderData.customerInfo.name,
         customerEmail: orderData.customerInfo.email,
         customerPhone: orderData.customerInfo.phone,
