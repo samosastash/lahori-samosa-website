@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { CreditCard, MapPin, Phone, User, Mail, Shield, CheckCircle } from 'lucide-react';
@@ -25,6 +25,8 @@ export function CheckoutPage() {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpMessage, setOtpMessage] = useState('');
   const [otpError, setOtpError] = useState('');
+  
+  // Remove payment method state - will be handled in PaymentMethodPage
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCustomerInfo({
@@ -86,7 +88,6 @@ export function CheckoutPage() {
     setOtpMessage('');
 
     try {
-      console.log('Verifying OTP:', otpCode, 'for email:', customerInfo.email);
       const result = OTPService.verifyOTP(customerInfo.email, otpCode);
       
       if (result.success) {
@@ -116,7 +117,6 @@ export function CheckoutPage() {
   useEffect(() => {
     const testConnection = async () => {
       try {
-        console.log('Testing Supabase connection...');
         const { data, error } = await supabase
           .from('orders')
           .select('id')
@@ -125,7 +125,6 @@ export function CheckoutPage() {
         if (error) {
           console.error('Supabase connection test failed:', error);
         } else {
-          console.log('Supabase connection successful:', data);
         }
       } catch (err) {
         console.error('Supabase connection error:', err);
@@ -135,74 +134,31 @@ export function CheckoutPage() {
     testConnection();
   }, []);
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
+  // Handle proceed to payment method page
+  const handleProceedToCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check if email is verified
     if (!otpVerified) {
-      alert('Please verify your email address before placing the order.');
+      alert('Please verify your email address before proceeding.');
       return;
     }
     
-    setLoading(true);
-
-    try {
-      // Generate order ID
-      const orderId = `LAHORI-${Date.now().toString(36).toUpperCase()}`;
-      
-      const orderData = {
-        id: orderId,
-        order_details: {
-          items: state.items,
-          total: state.total + 100,
-          payment_method: 'Cash on Delivery'
-        },
-        customer_name: customerInfo.name,
-        customer_phone: customerInfo.phone,
-        total_price: state.total + 100
-      };
-
-      console.log('Attempting to save order:', orderData);
-
-      // Insert order into Supabase database
-      const { data, error } = await supabase
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Supabase error details:', error);
-        console.error('Error code:', error.code);
-        console.error('Error message:', error.message);
-        console.error('Error details:', error.details);
-        throw new Error(`Database error: ${error.message}`);
-      }
-
-      console.log('Order saved successfully:', data);
-
-      // Send email notification using EmailJS from frontend
-      await sendOrderEmail(orderId, {
-        items: state.items,
-        total: state.total + 100,
-        customerInfo,
-        paymentMethod: 'Cash on Delivery'
-      });
-      
-      // Clear cart
-      dispatch({ type: 'CLEAR_CART' });
-      // Navigate to confirmation page
-      navigate(`/confirmation/${orderId}`);
-      
-    } catch (error) {
-      console.error('Order submission error:', error);
-      console.error('Error type:', typeof error);
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
-      alert(`Failed to place order: ${error.message}`);
-    } finally {
-      setLoading(false);
+    // Validate required fields
+    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
+      alert('Please fill in all required fields.');
+      return;
     }
+
+    // Store customer info in localStorage for PaymentMethodPage
+    localStorage.setItem('checkoutData', JSON.stringify({
+      customerInfo,
+      items: state.items,
+      total: state.total + 100
+    }));
+
+    // Navigate to payment method selection page
+    navigate('/payment-method');
   };
 
   // Send order emails using EmailJS (both to business and customer)
@@ -260,29 +216,19 @@ export function CheckoutPage() {
       }
 
       if (businessEmailResponse?.ok) {
-        console.log('✅ Business order email sent successfully');
       } else {
-        console.log('❌ Failed to send business order email');
-        console.log('Business email response status:', businessEmailResponse?.status);
         if (businessEmailResponse) {
           const errorText = await businessEmailResponse.text();
-          console.log('Business email response:', errorText);
         }
       }
 
       if (customerEmailResponse?.ok) {
-        console.log('✅ Customer confirmation email sent successfully');
       } else if (orderData.customerInfo.email) {
-        console.log('❌ Failed to send customer confirmation email');
-        console.log('Customer email response status:', customerEmailResponse?.status);
-        console.log('Customer email:', orderData.customerInfo.email);
         if (customerEmailResponse) {
           const errorText = await customerEmailResponse.text();
-          console.log('Customer email response:', errorText);
         }
       }
     } catch (error) {
-      console.log('Error sending emails:', error);
     }
   };
 
@@ -319,7 +265,7 @@ export function CheckoutPage() {
                 Customer Information
               </h2>
               
-              <form onSubmit={handleSubmitOrder} className="space-y-4">
+              <form onSubmit={handleProceedToCheckout} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-gray-700 mb-2">
@@ -504,32 +450,6 @@ export function CheckoutPage() {
               </form>
             </div>
 
-            {/* Payment Method */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl text-gray-900 mb-6 flex items-center">
-                <CreditCard className="w-5 h-5 mr-2 text-orange-600" />
-                Payment Method
-              </h2>
-              
-              <div className="p-4 border-2 border-orange-600 rounded-lg bg-orange-50">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="cod"
-                    name="payment"
-                    checked
-                    readOnly
-                    className="w-4 h-4 text-orange-600"
-                  />
-                  <label htmlFor="cod" className="ml-3 text-gray-900">
-                    Cash on Delivery
-                  </label>
-                </div>
-                <p className="mt-2 text-sm text-gray-600">
-                  Pay when your order is delivered to your doorstep
-                </p>
-              </div>
-            </div>
 
           </motion.div>
 
@@ -587,11 +507,11 @@ export function CheckoutPage() {
               </div>
             )}
 
-            {/* Place Order Button */}
+            {/* Proceed to Checkout Button */}
             <motion.button
               whileHover={{ scale: otpVerified ? 1.02 : 1 }}
               whileTap={{ scale: otpVerified ? 0.98 : 1 }}
-              onClick={handleSubmitOrder}
+              onClick={handleProceedToCheckout}
               disabled={loading || !otpVerified}
               className={`w-full px-6 py-4 rounded-lg transition-colors shadow-lg text-lg disabled:cursor-not-allowed ${
                 otpVerified 
@@ -599,7 +519,7 @@ export function CheckoutPage() {
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {loading ? 'Placing Order...' : otpVerified ? 'Place Order' : 'Verify Email to Continue'}
+              {loading ? 'Processing...' : otpVerified ? 'Proceed to Checkout' : 'Verify Email to Continue'}
             </motion.button>
 
             {/* Delivery Info */}

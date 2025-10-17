@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Mail, Phone, MapPin, Clock, DollarSign, Package, Truck, AlertTriangle, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Leaf, Clock, Award, ArrowRight, Star } from 'lucide-react';
@@ -104,7 +103,7 @@ export function HomePage() {
               className="flex space-x-8 pt-8"
             >
               <div className="text-center">
-                <div className="text-3xl text-emerald-800 brand-font">8+</div>
+                <div className="text-3xl text-emerald-800 brand-font">7+</div>
                 <div className="text-sm text-slate-500">Premium Products</div>
               </div>
               <div className="text-center">

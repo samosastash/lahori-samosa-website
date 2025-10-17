@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Mail, Phone, FileText, CreditCard, Truck, RotateCcw, User, Shield, AlertTriangle, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';

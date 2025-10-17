@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, MessageCircle, Send, Clock, CheckCircle } from 'lucide-react';
 import { EmailConfig, EMAIL_API_URL } from '../utils/emailConfig';
@@ -49,7 +49,6 @@ export function ContactPage() {
       });
 
       if (response.ok) {
-        console.log('Contact form email sent successfully');
         setSubmitted(true);
         
         // Reset form after 3 seconds
@@ -64,11 +63,9 @@ export function ContactPage() {
           });
         }, 3000);
       } else {
-        console.log('Failed to send contact form email');
         alert('Failed to send message. Please try again or contact us directly.');
       }
     } catch (error) {
-      console.log('Error sending contact form email:', error);
       alert('Failed to send message. Please try again or contact us directly.');
     } finally {
       setIsSubmitting(false);

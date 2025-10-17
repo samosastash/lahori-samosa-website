@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Mail, Phone, Shield, Lock, Eye, Users, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';

@@ -7,7 +7,9 @@ import { ProductsPage } from './components/ProductsPage';
 import { ProductDetailPage } from './components/ProductDetailPage';
 import { CartPage } from './components/CartPage';
 import { CheckoutPage } from './components/CheckoutPage';
+import { PaymentMethodPage } from './components/PaymentMethodPage';
 import { ConfirmationPage } from './components/ConfirmationPage';
+import { PaymentConfirmation } from './components/PaymentConfirmation';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
@@ -31,7 +33,9 @@ export default function App() {
               <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/payment-method" element={<PaymentMethodPage />} />
               <Route path="/confirmation/:orderId" element={<ConfirmationPage />} />
+              <Route path="/confirmation" element={<PaymentConfirmation />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
