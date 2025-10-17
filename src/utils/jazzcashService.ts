@@ -15,7 +15,7 @@ export const JAZZCASH_CONFIG = {
   LIVE_URL: 'https://payments.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform',
   
   // Return URLs - Using your live domain
-  RETURN_URL: 'https://www.lahorisamosa.shop/',
+  RETURN_URL: 'https://www.lahorisamosa.shop/confirmation',
   IPN_URL: 'https://www.lahorisamosa.shop/api/jazzcash-ipn',
   
   // Other settings
