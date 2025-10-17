@@ -47,8 +47,8 @@ export class JazzCashService {
    * Generate secure hash for JazzCash API
    */
   private static generateHash(data: Record<string, string>): string {
-    // Create hash string in the correct order for JazzCash (with salt at the beginning)
-    // Replace undefined/null values with empty strings
+    // For REQUEST hash, we only include the fields that should be in the initial request
+    // Response fields (pp_ResponseCode, pp_ResponseMessage, etc.) should be empty for requests
     const pp_Amount = data.pp_Amount || '';
     const pp_BillReference = data.pp_BillReference || '';
     const pp_CNIC = data.pp_CNIC || '';
@@ -57,23 +57,25 @@ export class JazzCashService {
     const pp_Language = data.pp_Language || '';
     const pp_MerchantID = data.pp_MerchantID || '';
     const pp_MobileNumber = data.pp_MobileNumber || '';
-    const pp_ResponseCode = data.pp_ResponseCode || '';
-    const pp_ResponseMessage = data.pp_ResponseMessage || '';
-    const pp_RetreivalReferenceNumber = data.pp_RetreivalReferenceNumber || '';
     const pp_TxnDateTime = data.pp_TxnDateTime || '';
     const pp_TxnRefNo = data.pp_TxnRefNo || '';
     const pp_TxnType = data.pp_TxnType || '';
     const pp_Version = data.pp_Version || '';
     
+    // For requests, response fields should be empty
+    const pp_ResponseCode = '';
+    const pp_ResponseMessage = '';
+    const pp_RetreivalReferenceNumber = '';
+    
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_TxnCurrency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;
     
-      console.log('Hash string:', hashString);
-      console.log('Hash string length:', hashString.length);
-      
-      // Use HMAC-SHA256 with salt as key
-      const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
-      console.log('Generated hash:', hash);
-      return hash;
+    console.log('Hash string:', hashString);
+    console.log('Hash string length:', hashString.length);
+    
+    // Use HMAC-SHA256 with salt as key
+    const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
+    console.log('Generated hash:', hash);
+    return hash;
   }
 
   /**
@@ -84,7 +86,7 @@ export class JazzCashService {
       // Generate unique transaction reference
       const txnRefNo = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
-      // Prepare payment data
+      // Prepare payment data - only include REQUEST fields
       const paymentRequest = {
         pp_Version: JAZZCASH_CONFIG.VERSION,
         pp_TxnType: JAZZCASH_CONFIG.TXN_TYPE,
@@ -102,10 +104,8 @@ export class JazzCashService {
         pp_MobileNumber: paymentData.customerPhone.replace(/\D/g, ''), // Remove non-digits
         pp_CNIC: '', // Optional for food orders
         pp_ContactNumber: paymentData.customerPhone.replace(/\D/g, ''),
-        pp_Language: JAZZCASH_CONFIG.LANGUAGE,
-        pp_ResponseCode: '',
-        pp_ResponseMessage: '',
-        pp_RetreivalReferenceNumber: ''
+        pp_Language: JAZZCASH_CONFIG.LANGUAGE
+        // Removed response fields - they should not be in the request
       };
 
       // Generate secure hash
