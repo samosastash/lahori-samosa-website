@@ -153,6 +153,11 @@ export class JazzCashService {
       console.log('Generated hash:', paymentRequest.pp_SecureHash);
       console.log('Payment request:', JSON.stringify(paymentRequest, null, 2));
       console.log('Sandbox URL:', JAZZCASH_CONFIG.SANDBOX_URL);
+      console.log('Date format check:', {
+        txnDateTime: paymentRequest.pp_TxnDateTime,
+        expiryDateTime: paymentRequest.pp_TxnExpiryDateTime,
+        description: paymentRequest.pp_Description
+      });
       console.log('🚀 About to redirect to JazzCash...');
       console.log('=== END DEBUG ===');
 
