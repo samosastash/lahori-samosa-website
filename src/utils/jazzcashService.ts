@@ -67,11 +67,13 @@ export class JazzCashService {
     
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_TxnCurrency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;
     
-    console.log('Hash string:', hashString);
-    
-    // Use HMAC-SHA256 with salt as key
-    const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
-    return hash;
+      console.log('Hash string:', hashString);
+      console.log('Hash string length:', hashString.length);
+      
+      // Use HMAC-SHA256 with salt as key
+      const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
+      console.log('Generated hash:', hash);
+      return hash;
   }
 
   /**
@@ -109,8 +111,11 @@ export class JazzCashService {
       // Generate secure hash
       paymentRequest.pp_SecureHash = this.generateHash(paymentRequest);
       
+      console.log('=== JAZZCASH PAYMENT REQUEST DEBUG ===');
       console.log('Generated hash:', paymentRequest.pp_SecureHash);
-      console.log('Payment request:', paymentRequest);
+      console.log('Payment request:', JSON.stringify(paymentRequest, null, 2));
+      console.log('Sandbox URL:', JAZZCASH_CONFIG.SANDBOX_URL);
+      console.log('=== END DEBUG ===');
 
       // Create form and submit to JazzCash
       this.submitToJazzCash(paymentRequest);
