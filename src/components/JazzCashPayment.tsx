@@ -53,6 +53,12 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
       if (result.success) {
         onPaymentInitiated();
         // The page will redirect to JazzCash automatically
+        
+        // Add timeout to reset processing state if JazzCash doesn't redirect
+        setTimeout(() => {
+          setIsProcessing(false);
+          onPaymentError('JazzCash is currently experiencing technical issues. Please try again later or use Cash on Delivery.');
+        }, 10000); // 10 second timeout
       } else {
         onPaymentError(result.message || 'Failed to initiate payment');
         setIsProcessing(false);
@@ -60,7 +66,7 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
 
     } catch (error) {
       console.error('JazzCash payment error:', error);
-      onPaymentError('An unexpected error occurred. Please try again.');
+      onPaymentError('JazzCash is currently experiencing technical issues. Please try again later or use Cash on Delivery.');
       setIsProcessing(false);
     }
   };
@@ -126,6 +132,15 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
             </div>
           )}
         </button>
+        
+        {isProcessing && (
+          <button
+            onClick={() => setIsProcessing(false)}
+            className="w-full mt-3 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-medium transition-colors text-sm"
+          >
+            Cancel Payment
+          </button>
+        )}
       </div>
     </div>
   );
