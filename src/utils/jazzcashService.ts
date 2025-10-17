@@ -48,7 +48,24 @@ export class JazzCashService {
    */
   private static generateHash(data: Record<string, string>): string {
     // Create hash string in the correct order for JazzCash (with salt at the beginning)
-    const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${data.pp_Amount}&${data.pp_BillReference}&${data.pp_CNIC}&${data.pp_ContactNumber}&${data.pp_TxnCurrency}&${data.pp_Language}&${data.pp_MerchantID}&${data.pp_MobileNumber}&${data.pp_ResponseCode}&${data.pp_ResponseMessage}&${data.pp_RetreivalReferenceNumber}&${data.pp_TxnDateTime}&${data.pp_TxnRefNo}&${data.pp_TxnType}&${data.pp_Version}`;
+    // Replace undefined/null values with empty strings
+    const pp_Amount = data.pp_Amount || '';
+    const pp_BillReference = data.pp_BillReference || '';
+    const pp_CNIC = data.pp_CNIC || '';
+    const pp_ContactNumber = data.pp_ContactNumber || '';
+    const pp_TxnCurrency = data.pp_TxnCurrency || '';
+    const pp_Language = data.pp_Language || '';
+    const pp_MerchantID = data.pp_MerchantID || '';
+    const pp_MobileNumber = data.pp_MobileNumber || '';
+    const pp_ResponseCode = data.pp_ResponseCode || '';
+    const pp_ResponseMessage = data.pp_ResponseMessage || '';
+    const pp_RetreivalReferenceNumber = data.pp_RetreivalReferenceNumber || '';
+    const pp_TxnDateTime = data.pp_TxnDateTime || '';
+    const pp_TxnRefNo = data.pp_TxnRefNo || '';
+    const pp_TxnType = data.pp_TxnType || '';
+    const pp_Version = data.pp_Version || '';
+    
+    const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_TxnCurrency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;
     
     console.log('Hash string:', hashString);
     
@@ -76,7 +93,7 @@ export class JazzCashService {
         pp_TxnCurrency: JAZZCASH_CONFIG.CURRENCY,
         pp_TxnDateTime: new Date().toISOString().replace(/[-:]/g, '').split('.')[0],
         pp_BillReference: paymentData.billReference,
-        pp_Description: paymentData.description,
+        pp_Description: paymentData.description || 'Order from Lahori Samosa', // Ensure description is not empty
         pp_TxnExpiryDateTime: new Date(Date.now() + 30 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0], // 30 minutes
         pp_ReturnURL: JAZZCASH_CONFIG.RETURN_URL,
         pp_SecureHash: '', // Will be calculated
