@@ -11,8 +11,8 @@ export const JAZZCASH_CONFIG = {
   INTEGRITY_SALT: 'c78ust11gu',
   
   // URLs
-  SANDBOX_URL: 'https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform',
-  LIVE_URL: 'https://payments.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform',
+  SANDBOX_URL: 'https://sandbox.jazzcash.com.pk/CustomerPortal/TransactionManagement/TransactionProcessing',
+  LIVE_URL: 'https://payments.jazzcash.com.pk/CustomerPortal/TransactionManagement/TransactionProcessing',
   
   // Return URLs - Using your live domain
   RETURN_URL: 'https://www.lahorisamosa.shop/api/payment-return',
@@ -189,7 +189,7 @@ export class JazzCashService {
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = JAZZCASH_CONFIG.SANDBOX_URL;
-    form.target = '_self';
+    form.target = '_blank'; // Open in new tab to avoid redirect issues
 
     // Add all payment data as hidden inputs
     Object.entries(paymentData).forEach(([key, value]) => {
