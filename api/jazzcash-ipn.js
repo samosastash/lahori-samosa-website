@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     const hashString = `${INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_Currency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;
     
     const calculatedHash = crypto
-      .createHash('sha256')
+      .createHmac('sha256', INTEGRITY_SALT)
       .update(hashString)
       .digest('hex')
       .toUpperCase();

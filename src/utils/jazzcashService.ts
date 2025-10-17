@@ -50,7 +50,8 @@ export class JazzCashService {
     // Create hash string in the correct order for JazzCash
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${data.pp_Amount}&${data.pp_BillReference}&${data.pp_CNIC}&${data.pp_ContactNumber}&${data.pp_TxnCurrency}&${data.pp_Language}&${data.pp_MerchantID}&${data.pp_MobileNumber}&${data.pp_ResponseCode}&${data.pp_ResponseMessage}&${data.pp_RetreivalReferenceNumber}&${data.pp_TxnDateTime}&${data.pp_TxnRefNo}&${data.pp_TxnType}&${data.pp_Version}`;
     
-    const hash = crypto.SHA256(hashString).toString().toUpperCase();
+    // Use HMAC-SHA256 instead of plain SHA256
+    const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
     return hash;
   }
 
