@@ -135,7 +135,7 @@ export class JazzCashService {
         pp_TxnCurrency: JAZZCASH_CONFIG.CURRENCY,
         pp_TxnDateTime: new Date().toISOString().replace(/[-:]/g, '').split('.')[0],
         pp_BillReference: paymentData.billReference,
-        pp_Description: paymentData.description || 'Order from Lahori Samosa', // Ensure description is not empty
+        pp_Description: 'LAHORI SAMOSA INVOICE', // Simple description for JazzCash
         pp_TxnExpiryDateTime: new Date(Date.now() + 30 * 60 * 1000).toISOString().replace(/[-:]/g, '').split('.')[0], // 30 minutes
         pp_ReturnURL: JAZZCASH_CONFIG.RETURN_URL,
         pp_SecureHash: '', // Will be calculated
@@ -153,6 +153,7 @@ export class JazzCashService {
       console.log('Generated hash:', paymentRequest.pp_SecureHash);
       console.log('Payment request:', JSON.stringify(paymentRequest, null, 2));
       console.log('Sandbox URL:', JAZZCASH_CONFIG.SANDBOX_URL);
+      console.log('🚀 About to redirect to JazzCash...');
       console.log('=== END DEBUG ===');
 
       // Create form and submit to JazzCash
