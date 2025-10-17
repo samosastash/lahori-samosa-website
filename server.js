@@ -14,11 +14,11 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'build')));
 }
 
-// Generate order ID
+// Generate order ID (max 20 chars for JazzCash)
 function generateOrderId() {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substring(2, 7);
-  return `LAHORI-${timestamp}${random}`.toUpperCase();
+  return `LAHORI${timestamp}${random}`.toUpperCase().substring(0, 20);
 }
 
 // Email sending is now handled by frontend using EmailJS

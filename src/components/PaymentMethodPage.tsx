@@ -70,8 +70,8 @@ export function PaymentMethodPage() {
     if (!checkoutData) return;
 
     try {
-      // Generate order ID
-      const orderId = `LAHORI-${Date.now().toString(36).toUpperCase()}`;
+      // Generate order ID (max 20 chars for JazzCash)
+      const orderId = `LAHORI${Date.now().toString(36).toUpperCase().substring(0, 10)}`;
       
       const orderData = {
         id: orderId,
@@ -114,8 +114,8 @@ export function PaymentMethodPage() {
     setLoading(true);
 
     try {
-      // Generate order ID
-      const orderId = `LAHORI-${Date.now().toString(36).toUpperCase()}`;
+      // Generate order ID (max 20 chars for JazzCash)
+      const orderId = `LAHORI${Date.now().toString(36).toUpperCase().substring(0, 10)}`;
       
       const orderData = {
         id: orderId,
