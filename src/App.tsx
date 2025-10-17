@@ -18,38 +18,41 @@ import { ShippingInfoPage } from './components/ShippingInfoPage';
 import { CartProvider } from './components/CartContext';
 import { ScrollToTop } from './components/ScrollToTop';
 import { SideCart } from './components/SideCart';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   return (
-    <CartProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="min-h-screen bg-white flex flex-col">
-          <Header />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/products" element={<ProductsPage />} />
-              <Route path="/product/:id" element={<ProductDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/payment-method" element={<PaymentMethodPage />} />
-              <Route path="/confirmation/:orderId" element={<ConfirmationPage />} />
-              <Route path="/confirmation" element={<PaymentConfirmation />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/shipping-info" element={<ShippingInfoPage />} />
-              {/* Handle preview page and any other unmatched routes */}
-              <Route path="/preview_page.html" element={<Navigate to="/" replace />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-        <SideCart />
-      </Router>
-    </CartProvider>
+    <ErrorBoundary>
+      <CartProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="min-h-screen bg-white flex flex-col">
+            <Header />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route path="/product/:id" element={<ProductDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/payment-method" element={<PaymentMethodPage />} />
+                <Route path="/confirmation/:orderId" element={<ConfirmationPage />} />
+                <Route path="/confirmation" element={<PaymentConfirmation />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/shipping-info" element={<ShippingInfoPage />} />
+                {/* Handle preview page and any other unmatched routes */}
+                <Route path="/preview_page.html" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+          <SideCart />
+        </Router>
+      </CartProvider>
+    </ErrorBoundary>
   );
 }

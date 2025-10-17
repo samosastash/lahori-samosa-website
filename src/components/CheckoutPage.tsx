@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { CreditCard, MapPin, Phone, User, Mail, Shield, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, User, Mail, Shield, CheckCircle } from 'lucide-react';
 import { useCart } from './CartContext';
 import { supabase } from '../utils/supabase/client';
 import { OTPService } from '../utils/otpService';

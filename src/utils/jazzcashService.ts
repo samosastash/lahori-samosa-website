@@ -44,27 +44,52 @@ export interface JazzCashResponse {
 
 export class JazzCashService {
   /**
-   * Generate secure hash for JazzCash API
+   * Generate secure hash for JazzCash API requests
    */
-  private static generateHash(data: Record<string, string>): string {
-    // JazzCash official method: Sort all fields alphabetically, then concatenate
-    const sortedData: Record<string, string> = {};
-    
-    // Only include JazzCash parameters (exclude custom parameters and response fields)
-    const jazzcashParams = [
+  private static generateRequestHash(data: Record<string, string>): string {
+    // JazzCash request parameters for hash generation
+    const requestParams = [
       'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
       'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
       'pp_ReturnURL', 'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime',
       'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
     ];
     
-    // Filter and sort only JazzCash parameters
+    return this.generateHash(data, requestParams, 'REQUEST');
+  }
+
+  /**
+   * Generate secure hash for JazzCash API responses
+   */
+  private static generateResponseHash(data: Record<string, string>): string {
+    // JazzCash response parameters for hash generation (in alphabetical order)
+    const responseParams = [
+      'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
+      'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_ResponseCode',
+      'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 'pp_TxnCurrency',
+      'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+    ];
+    
+    return this.generateHash(data, responseParams, 'RESPONSE');
+  }
+
+  /**
+   * Generate secure hash for JazzCash API (internal method)
+   */
+  private static generateHash(data: Record<string, string>, allowedParams: string[], type: string): string {
+    // JazzCash official method: Sort all fields alphabetically, then concatenate
+    const sortedData: Record<string, string> = {};
+    
+    // Filter and sort only allowed parameters
     Object.keys(data)
-      .filter(key => jazzcashParams.includes(key) && key !== 'pp_SecureHash')
+      .filter(key => allowedParams.includes(key) && key !== 'pp_SecureHash')
       .sort()
       .forEach(key => {
         sortedData[key] = data[key] || '';
       });
+    
+    // Create array of key-value pairs for debugging
+    const keyValuePairs = Object.entries(sortedData).map(([key, value]) => `${key}=${value}`);
     
     // Concatenate sorted fields with '&' separator
     const concatenatedString = Object.values(sortedData).join('&');
@@ -72,14 +97,15 @@ export class JazzCashService {
     // Prepend the integrity salt
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${concatenatedString}`;
     
-    console.log('JazzCash params only:', sortedData);
-    console.log('Concatenated string:', concatenatedString);
-    console.log('Hash string:', hashString);
-    console.log('Hash string length:', hashString.length);
+    console.log(`JazzCash ${type} params:`, sortedData);
+    console.log(`Key-value pairs (${type}):`, keyValuePairs);
+    console.log(`Concatenated string (${type}):`, concatenatedString);
+    console.log(`Hash string (${type}):`, hashString);
+    console.log(`Hash string length (${type}):`, hashString.length);
     
     // Use HMAC-SHA256 with salt as key
     const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
-    console.log('Generated hash:', hash);
+    console.log(`Generated hash (${type}):`, hash);
     return hash;
   }
 
@@ -114,7 +140,7 @@ export class JazzCashService {
       };
 
       // Generate secure hash
-      paymentRequest.pp_SecureHash = this.generateHash(paymentRequest);
+      paymentRequest.pp_SecureHash = this.generateRequestHash(paymentRequest);
       
       console.log('=== JAZZCASH PAYMENT REQUEST DEBUG ===');
       console.log('Generated hash:', paymentRequest.pp_SecureHash);
@@ -186,17 +212,20 @@ export class JazzCashService {
         };
       }
 
-      // Filter out custom parameters (like 'payment') and only use JazzCash response parameters
+      // Create a copy of response data for hash verification
       const jazzcashResponseParams: Record<string, string> = {};
-      const jazzcashResponseFields = [
+      
+      // JazzCash response parameters that should be included in hash verification
+      const responseFields = [
         'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
         'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_ResponseCode',
         'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 'pp_TxnCurrency',
         'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
       ];
 
-      jazzcashResponseFields.forEach(field => {
-        if (responseData[field] !== undefined) {
+      // Only include fields that exist in the response and are in our allowed list
+      responseFields.forEach(field => {
+        if (responseData[field] !== undefined && responseData[field] !== null) {
           jazzcashResponseParams[field] = responseData[field];
         }
       });
@@ -204,11 +233,20 @@ export class JazzCashService {
       console.log('Filtered JazzCash response params:', jazzcashResponseParams);
 
       // Verify secure hash using only JazzCash parameters
-      const calculatedHash = this.generateHash(jazzcashResponseParams);
+      const calculatedHash = this.generateResponseHash(jazzcashResponseParams);
+      
+      console.log('Hash verification details:', {
+        calculated: calculatedHash,
+        received: responseData.pp_SecureHash,
+        match: calculatedHash === responseData.pp_SecureHash
+      });
+      
       if (calculatedHash !== responseData.pp_SecureHash) {
-        console.log('Hash mismatch:', {
+        console.log('Hash mismatch details:', {
           calculated: calculatedHash,
-          received: responseData.pp_SecureHash
+          received: responseData.pp_SecureHash,
+          calculatedLength: calculatedHash.length,
+          receivedLength: responseData.pp_SecureHash.length
         });
         return {
           isValid: false,

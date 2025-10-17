@@ -95,7 +95,7 @@ app.get('/make-server-88c4ddbd/health', (req, res) => {
 // Serve React app for all non-API routes (for production)
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 }
 

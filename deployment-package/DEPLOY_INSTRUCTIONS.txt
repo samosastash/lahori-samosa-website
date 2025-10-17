@@ -1,0 +1,45 @@
+🚀 LAHORI SAMOSA - DEPLOYMENT PACKAGE
+=====================================
+
+✅ JAZZCASH HASH VERIFICATION FIXES INCLUDED!
+
+📁 FILES TO UPLOAD:
+- All files in this folder to your web server root
+- Make sure to maintain the folder structure
+
+🔧 SERVER SETUP COMMANDS:
+1. Upload all files to your server
+2. SSH into your server
+3. Run these commands:
+
+   cd /path/to/your/website
+   npm install
+   export NODE_ENV=production
+   npm start
+
+🌐 YOUR DOMAIN: lahorisamosa.shop
+
+🧪 TEST AFTER DEPLOYMENT:
+1. Visit: https://lahorisamosa.shop
+2. Add items to cart
+3. Go to checkout
+4. Verify email with OTP
+5. Test JazzCash payment
+6. Check browser console for debugging info
+
+✅ FIXES INCLUDED:
+- JazzCash hash verification fixed
+- Separate hash generation for request/response
+- Enhanced error handling
+- Better debugging logs
+- Error boundaries added
+- Dependencies pinned
+
+🎯 EXPECTED RESULT:
+Payment should now work correctly without "Hash verification failed" error!
+
+📞 SUPPORT:
+- Email: samosastash@gmail.com
+- Phone: +92 324 4060113
+
+Deployed: $(Get-Date)
