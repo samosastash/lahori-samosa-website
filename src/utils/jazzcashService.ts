@@ -225,9 +225,9 @@ export class JazzCashService {
       // JazzCash response parameters that should be included in hash verification
       const responseFields = [
         'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
-        'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_ResponseCode',
-        'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 'pp_TxnCurrency',
-        'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+        'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
+        'pp_ResponseCode', 'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 
+        'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
       ];
 
       // Only include fields that exist in the response and are in our allowed list
