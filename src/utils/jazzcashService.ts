@@ -47,28 +47,25 @@ export class JazzCashService {
    * Generate secure hash for JazzCash API
    */
   private static generateHash(data: Record<string, string>): string {
-    // For REQUEST hash, we only include the fields that should be in the initial request
-    // Response fields (pp_ResponseCode, pp_ResponseMessage, etc.) should be empty for requests
-    const pp_Amount = data.pp_Amount || '';
-    const pp_BillReference = data.pp_BillReference || '';
-    const pp_CNIC = data.pp_CNIC || '';
-    const pp_ContactNumber = data.pp_ContactNumber || '';
-    const pp_TxnCurrency = data.pp_TxnCurrency || '';
-    const pp_Language = data.pp_Language || '';
-    const pp_MerchantID = data.pp_MerchantID || '';
-    const pp_MobileNumber = data.pp_MobileNumber || '';
-    const pp_TxnDateTime = data.pp_TxnDateTime || '';
-    const pp_TxnRefNo = data.pp_TxnRefNo || '';
-    const pp_TxnType = data.pp_TxnType || '';
-    const pp_Version = data.pp_Version || '';
+    // JazzCash official method: Sort all fields alphabetically, then concatenate
+    const sortedData: Record<string, string> = {};
     
-    // For requests, response fields should be empty
-    const pp_ResponseCode = '';
-    const pp_ResponseMessage = '';
-    const pp_RetreivalReferenceNumber = '';
+    // Sort all fields alphabetically (excluding pp_SecureHash)
+    Object.keys(data)
+      .filter(key => key !== 'pp_SecureHash')
+      .sort()
+      .forEach(key => {
+        sortedData[key] = data[key] || '';
+      });
     
-    const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_TxnCurrency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;
+    // Concatenate sorted fields with '&' separator
+    const concatenatedString = Object.values(sortedData).join('&');
     
+    // Prepend the integrity salt
+    const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${concatenatedString}`;
+    
+    console.log('Sorted data:', sortedData);
+    console.log('Concatenated string:', concatenatedString);
     console.log('Hash string:', hashString);
     console.log('Hash string length:', hashString.length);
     
