@@ -29,6 +29,8 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
 
   const handleJazzCashPayment = async () => {
     setIsProcessing(true);
+    console.log('JazzCash payment button clicked!');
+    
     try {
       // Prepare payment data
       const paymentData: JazzCashPaymentData = {
@@ -41,9 +43,12 @@ export function JazzCashPayment({ orderData, onPaymentInitiated, onPaymentError 
         customerAddress: orderData.customerInfo.address
       };
 
+      console.log('Payment data prepared:', paymentData);
 
       // Initiate payment
       const result = await JazzCashService.initiatePayment(paymentData);
+      
+      console.log('JazzCash service result:', result);
       
       if (result.success) {
         onPaymentInitiated();
