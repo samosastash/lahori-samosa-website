@@ -34,8 +34,20 @@ export function HomePage() {
           responseData[key] = value;
         });
 
+        // DEBUG: Log all parameters JazzCash sent
+        console.log('🔍 ALL JAZZCASH PARAMETERS RECEIVED:');
+        console.log('URL:', window.location.href);
+        console.log('Parameters:', responseData);
+        console.log('Parameter count:', Object.keys(responseData).length);
+        
+        // Log each parameter individually
+        Object.entries(responseData).forEach(([key, value]) => {
+          console.log(`${key}: ${value}`);
+        });
+
         // Verify payment response
         const verification = JazzCashService.verifyPaymentResponse(responseData);
+        console.log('🔍 VERIFICATION RESULT:', verification);
         setPaymentStatus(verification);
       } catch (error) {
         console.error('Payment confirmation error:', error);
