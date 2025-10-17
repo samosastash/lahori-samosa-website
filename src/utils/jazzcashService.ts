@@ -47,10 +47,12 @@ export class JazzCashService {
    * Generate secure hash for JazzCash API
    */
   private static generateHash(data: Record<string, string>): string {
-    // Create hash string in the correct order for JazzCash
+    // Create hash string in the correct order for JazzCash (with salt at the beginning)
     const hashString = `${JAZZCASH_CONFIG.INTEGRITY_SALT}&${data.pp_Amount}&${data.pp_BillReference}&${data.pp_CNIC}&${data.pp_ContactNumber}&${data.pp_TxnCurrency}&${data.pp_Language}&${data.pp_MerchantID}&${data.pp_MobileNumber}&${data.pp_ResponseCode}&${data.pp_ResponseMessage}&${data.pp_RetreivalReferenceNumber}&${data.pp_TxnDateTime}&${data.pp_TxnRefNo}&${data.pp_TxnType}&${data.pp_Version}`;
     
-    // Use HMAC-SHA256 instead of plain SHA256
+    console.log('Hash string:', hashString);
+    
+    // Use HMAC-SHA256 with salt as key
     const hash = crypto.HmacSHA256(hashString, JAZZCASH_CONFIG.INTEGRITY_SALT).toString(crypto.enc.Hex).toUpperCase();
     return hash;
   }
@@ -89,6 +91,9 @@ export class JazzCashService {
 
       // Generate secure hash
       paymentRequest.pp_SecureHash = this.generateHash(paymentRequest);
+      
+      console.log('Generated hash:', paymentRequest.pp_SecureHash);
+      console.log('Payment request:', paymentRequest);
 
       // Create form and submit to JazzCash
       this.submitToJazzCash(paymentRequest);
