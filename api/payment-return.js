@@ -1,24 +1,24 @@
 // This is a Vercel Serverless Function to handle JazzCash payment returns
 // Path: /api/payment-return.js
 
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 // JazzCash Sandbox Credentials
 const JAZZCASH_INTEGRITY_SALT = 'c78ust11gu';
 
 // Function to generate secure hash (same as frontend)
-function generateHash(data) {
-  // Only include JazzCash parameters
-  const jazzcashParams = [
+function generateResponseHash(data) {
+  // JazzCash response parameters for hash generation (in alphabetical order)
+  const responseParams = [
     'pp_Amount', 'pp_BillReference', 'pp_CNIC', 'pp_ContactNumber', 'pp_Currency',
-    'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_Password',
-    'pp_ReturnURL', 'pp_TxnCurrency', 'pp_TxnDateTime', 'pp_TxnExpiryDateTime',
-    'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
+    'pp_Description', 'pp_Language', 'pp_MerchantID', 'pp_MobileNumber', 'pp_ResponseCode',
+    'pp_ResponseMessage', 'pp_RetreivalReferenceNumber', 'pp_ReturnURL', 'pp_TxnCurrency',
+    'pp_TxnDateTime', 'pp_TxnRefNo', 'pp_TxnType', 'pp_Version'
   ];
   
   const sortedData = {};
   Object.keys(data)
-    .filter(key => jazzcashParams.includes(key) && key !== 'pp_SecureHash')
+    .filter(key => responseParams.includes(key) && key !== 'pp_SecureHash')
     .sort()
     .forEach(key => {
       sortedData[key] = data[key] || '';
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     
     // Verify hash if we have the required fields
     if (paymentData.pp_SecureHash && paymentData.pp_ResponseCode) {
-      const calculatedHash = generateHash(paymentData);
+      const calculatedHash = generateResponseHash(paymentData);
       console.log('Hash verification:', {
         calculated: calculatedHash,
         received: paymentData.pp_SecureHash,
