@@ -1,9 +1,48 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Leaf, Clock, Award, ArrowRight, Star } from 'lucide-react';
+import { Leaf, Clock, Award, ArrowRight, Star, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { ResponsiveImage } from './ResponsiveImage';
+import { JazzCashService } from '../utils/jazzcashService';
+import { useEffect, useState } from 'react';
 
 export function HomePage() {
+  const [searchParams] = useSearchParams();
+  const [paymentStatus, setPaymentStatus] = useState<{
+    isValid: boolean;
+    isSuccess: boolean;
+    message: string;
+    orderId?: string;
+  } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle payment confirmation
+  useEffect(() => {
+    const paymentParam = searchParams.get('payment');
+    if (paymentParam === 'confirmation') {
+      setIsLoading(true);
+      
+      try {
+        // Extract JazzCash response parameters
+        const responseData: Record<string, string> = {};
+        searchParams.forEach((value, key) => {
+          responseData[key] = value;
+        });
+
+        // Verify payment response
+        const verification = JazzCashService.verifyPaymentResponse(responseData);
+        setPaymentStatus(verification);
+      } catch (error) {
+        console.error('Payment confirmation error:', error);
+        setPaymentStatus({
+          isValid: false,
+          isSuccess: false,
+          message: 'Payment verification failed. Please contact support.'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [searchParams]);
   const heroImage = "/images/hero/heropagesamosa.jpg";
   const samosaImage = "/images/hero/CHICKKE~2.jpg";
   const spicesImage = "https://images.unsplash.com/photo-1733046894155-1eed0e133b51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwc3BpY2VzJTIwbWluaW1hbGlzdCUyMHBob3RvZ3JhcGh5fGVufDF8fHx8MTc1OTA1Mjc4N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral";
@@ -25,6 +64,53 @@ export function HomePage() {
       description: "Traditional recipes passed down through generations, now preserved in modern convenience."
     }
   ];
+
+  // Show payment confirmation if payment parameter is present
+  if (searchParams.get('payment') === 'confirmation') {
+    return (
+      <div className="pt-20 min-h-screen bg-gray-50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center"
+        >
+          <div className="mb-6 flex justify-center">
+            {isLoading ? (
+              <Loader2 className="w-24 h-24 text-blue-500 animate-spin" />
+            ) : paymentStatus?.isSuccess ? (
+              <CheckCircle className="w-24 h-24 text-green-500" />
+            ) : (
+              <XCircle className="w-24 h-24 text-red-500" />
+            )}
+          </div>
+          
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            {isLoading ? 'Processing Payment...' : paymentStatus?.isSuccess ? 'Payment Successful!' : 'Payment Failed'}
+          </h1>
+          
+          <p className="text-gray-600 mb-6">
+            {isLoading ? 'Please wait while we verify your payment...' : paymentStatus?.message}
+          </p>
+
+          {paymentStatus?.orderId && (
+            <p className="text-sm text-gray-500 mb-6">
+              Order Reference: <span className="font-mono font-semibold text-gray-700">{paymentStatus.orderId}</span>
+            </p>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => window.location.href = '/'}
+            className="w-full px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors shadow-md"
+          >
+            Continue Shopping
+          </motion.button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-0 bg-white overflow-hidden">
