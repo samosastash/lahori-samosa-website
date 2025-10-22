@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     // Get credentials from environment variables (secure, server-side only)
-    const INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
+    const INTEGRITY_SALT = process.env.VITE_JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
 
     // Verify the response hash
     const isValid = verifyResponseHash(responseData, INTEGRITY_SALT);

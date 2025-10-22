@@ -18,9 +18,9 @@ export default async function handler(req, res) {
     }
 
     // Get credentials from environment variables (secure, server-side only)
-    const MERCHANT_ID = process.env.JAZZCASH_MERCHANT_ID || 'MC407733';
-    const PASSWORD = process.env.JAZZCASH_PASSWORD || 'v58y3xx959';
-    const INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
+    const MERCHANT_ID = process.env.VITE_JAZZCASH_MERCHANT_ID || 'MC407733';
+    const PASSWORD = process.env.VITE_JAZZCASH_PASSWORD || 'v58y3xx959';
+    const INTEGRITY_SALT = process.env.VITE_JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
     const SANDBOX_URL = process.env.VITE_JAZZCASH_SANDBOX_URL || 'https://sandbox.jazzcash.com.pk/CustomerPortal/TransactionManagement/TransactionProcessing';
     const LIVE_URL = process.env.VITE_JAZZCASH_LIVE_URL || 'https://payments.jazzcash.com.pk/CustomerPortal/TransactionManagement/TransactionProcessing';
     const RETURN_URL = process.env.VITE_JAZZCASH_RETURN_URL || 'https://www.lahorisamosa.shop/api/payment-return';
