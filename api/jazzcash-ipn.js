@@ -34,9 +34,9 @@ export default async function handler(req, res) {
     } = req.body;
 
     // JazzCash Sandbox Credentials
-    const MERCHANT_ID = 'MC407733';
-    const PASSWORD = 'v58y3xx959';
-    const INTEGRITY_SALT = 'c78ust11gu';
+const MERCHANT_ID = process.env.JAZZCASH_MERCHANT_ID || 'MC407733';
+const PASSWORD = process.env.JAZZCASH_PASSWORD || 'v58y3xx959';
+const INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
 
     // Verify the secure hash
     const hashString = `${INTEGRITY_SALT}&${pp_Amount}&${pp_BillReference}&${pp_CNIC}&${pp_ContactNumber}&${pp_Currency}&${pp_Language}&${pp_MerchantID}&${pp_MobileNumber}&${pp_ResponseCode}&${pp_ResponseMessage}&${pp_RetreivalReferenceNumber}&${pp_TxnDateTime}&${pp_TxnRefNo}&${pp_TxnType}&${pp_Version}`;

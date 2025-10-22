@@ -112,19 +112,19 @@ export function Footer() {
                 <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <Phone className="w-4 h-4 text-emerald-700" />
                 </div>
-                <span>+92 324 4060113</span>
+                <span>{import.meta.env.VITE_BUSINESS_PHONE || "+92 324 4060113"}</span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-slate-600">
                 <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <Mail className="w-4 h-4 text-emerald-700" />
                 </div>
-                <span>samosastash@gmail.com</span>
+                <span>{import.meta.env.VITE_BUSINESS_EMAIL || "samosastash@gmail.com"}</span>
               </div>
               <div className="flex items-center space-x-3 text-sm text-slate-600">
                 <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
                   <MapPin className="w-4 h-4 text-emerald-700" />
                 </div>
-                <span>Lahore, Pakistan</span>
+                <span>{import.meta.env.VITE_BUSINESS_LOCATION || "Lahore, Pakistan"}</span>
               </div>
             </div>
           </motion.div>

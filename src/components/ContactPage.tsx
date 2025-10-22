@@ -76,30 +76,30 @@ export function ContactPage() {
     {
       icon: Phone,
       title: "Phone",
-      details: "+92 324 4060113",
+      details: import.meta.env.VITE_BUSINESS_PHONE || "+92 324 4060113",
       description: "Available 9 AM - 8 PM, Monday to Saturday",
-      action: "tel:+923244060113"
+      action: `tel:${import.meta.env.VITE_BUSINESS_PHONE?.replace(/\s/g, '') || '+923244060113'}`
     },
     {
       icon: Mail,
       title: "Email",
-      details: "samosastash@gmail.com",
+      details: import.meta.env.VITE_BUSINESS_EMAIL || "samosastash@gmail.com",
       description: "We'll respond within 24 hours",
-      action: "mailto:samosastash@gmail.com"
+      action: `mailto:${import.meta.env.VITE_BUSINESS_EMAIL || 'samosastash@gmail.com'}`
     },
     {
       icon: MapPin,
       title: "Location",
-      details: "Lahore, Pakistan",
+      details: import.meta.env.VITE_BUSINESS_LOCATION || "Lahore, Pakistan",
       description: "We deliver across Lahore city",
       action: ""
     },
     {
       icon: MessageCircle,
       title: "WhatsApp",
-      details: "+92 324 4060113",
+      details: import.meta.env.VITE_BUSINESS_PHONE || "+92 324 4060113",
       description: "Quick support and order updates",
-      action: "https://wa.me/923244060113"
+      action: `https://wa.me/${import.meta.env.VITE_BUSINESS_PHONE?.replace(/\s/g, '') || '923244060113'}`
     }
   ];
 
@@ -384,7 +384,7 @@ export function ContactPage() {
                       </div>
                       <div>
                         <div className="font-medium">Call Now</div>
-                        <div className="text-emerald-200 text-sm">+92 324 4060113</div>
+                        <div className="text-emerald-200 text-sm">{import.meta.env.VITE_BUSINESS_PHONE || "+92 324 4060113"}</div>
                       </div>
                     </motion.a>
                     
@@ -401,7 +401,7 @@ export function ContactPage() {
                       </div>
                       <div>
                         <div className="font-medium">WhatsApp</div>
-                        <div className="text-emerald-200 text-sm">+92 324 4060113</div>
+                        <div className="text-emerald-200 text-sm">{import.meta.env.VITE_BUSINESS_PHONE || "+92 324 4060113"}</div>
                       </div>
                     </motion.a>
                   </div>

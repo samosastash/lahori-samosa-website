@@ -4,7 +4,6 @@ import { Leaf, Clock, Award, ArrowRight, Star, CheckCircle, XCircle, Loader2 } f
 import { ResponsiveImage } from './ResponsiveImage';
 import { JazzCashService } from '../utils/jazzcashService';
 import { useEffect, useState } from 'react';
-import { testConsoleNinja } from '../utils/consoleTest';
 
 export function HomePage() {
   const [searchParams] = useSearchParams();
@@ -16,10 +15,6 @@ export function HomePage() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Test Console Ninja extension
-  useEffect(() => {
-    testConsoleNinja();
-  }, []);
 
   // Force rebuild test
   useEffect(() => {

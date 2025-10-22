@@ -4,7 +4,7 @@
 import crypto from 'crypto';
 
 // JazzCash Sandbox Credentials
-const JAZZCASH_INTEGRITY_SALT = 'c78ust11gu';
+const JAZZCASH_INTEGRITY_SALT = process.env.JAZZCASH_INTEGRITY_SALT || 'c78ust11gu';
 
 // Function to generate secure hash (same as frontend)
 function generateResponseHash(data) {
